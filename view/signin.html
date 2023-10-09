@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/signin.css">
+
+</head>
+
+<body>
+
+    <div class="container" id="container">
+        <div class="form-container sign-up-container">
+            <!-- <form onsubmit='signup(event)'> -->
+            <form>
+                <h1>Create Account</h1>
+                <input type="text" placeholder="Name" name="Name" id="signupName" required />
+                <input type="email" placeholder="Email" name="Email" id="signupEmail" required />
+                <input type="password" id="signupPassword" placeholder="Password" name="password" required />
+                <button id="signUpBtn">Sign Up</button>
+
+            </form>
+        </div>
+
+        <div class="form-container sign-in-container">
+            <form>
+                <h1>Login</h1>
+                <input type="email" placeholder="Email" name="loginEmail" id="loginEmail" required />
+                <input type="password" placeholder="Password" name="loginPassword" id="loginPassword" required />
+                <a href="/passwordforgetpage">Forgot your password?</a>
+                <button type="submit" id="loginBtn">Login</button>
+            </form>
+        </div>
+
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>Welcome Back!</h1>
+                    <p>To keep connected with us please login with your personal info</p>
+                    <button class="ghost" id="signIn">Login</button>
+                </div>
+
+                <div class="overlay-panel overlay-right">
+                    <h1>Hello, Friend!</h1>
+                    <p>Enter your personal details and start journey with us</p>
+                    <button class="ghost" id="signUp">Sign Up</button>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
+<!-- <script src="login.js"></script> -->
+<script>
+    const signUp = document.getElementById("signUp"); // ghost
+    const signIn = document.getElementById("signIn"); // ghost
+
+    const container = document.getElementById("container"); // form
+
+    const signUpBtn = document.getElementById("signUpBtn"); // Signup form
+    const signupName = document.getElementById("signupName"); // Signup form
+    const signupEmail = document.getElementById("signupEmail"); // Signup form
+    const signupPassword = document.getElementById("signupPassword"); // Signup form
+
+    const loginBtn = document.getElementById("loginBtn"); // login form
+    const loginEmail = document.getElementById("loginEmail"); // login form
+    const loginPassword = document.getElementById("loginPassword"); // login form
+
+    signUp.addEventListener("click", () => {
+        container.classList.add("right-panel-active");
+    });
+
+    signIn.addEventListener("click", () => {
+        container.classList.remove("right-panel-active");
+    });
+
+    async function signup() {
+        try {
+            const signupDetails = {
+                name: signupName.value,
+                email: signupEmail.value,
+                password: signupPassword.value,
+            };
+            console.log(signupDetails);
+
+            const response = await axios.post("/signup", signupDetails);
+            alert(response.data.message);
+            console.log('post ko response to aagyo>>>', response)
+            window.location.href = "/";
+        } catch (error) {
+            if (error.response) {
+                const errorMessage = error.response.data.message;
+                alert(errorMessage);
+            } else {
+                alert("An error occurred. Please try again later.");
+            }
+        }
+    }
+
+    async function login() {
+        try {
+            const loginDetails = {
+                email: loginEmail.value,
+                password: loginPassword.value,
+            };
+            console.log(loginDetails);
+
+            const response = await axios.post("/", loginDetails);
+            const token = response.data.token;
+            localStorage.setItem('accessToken', token)
+            alert(response.data.message)
+            window.location.href = "/add-expense";
+        } catch (error) {
+            alert(error.response.data.message)
+        }
+    }
+
+    loginBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        login(); // Add event listener for login button click within the function
+    });
+
+    signUpBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        signup(); // Add event listener for signup button click within the function
+    });
+</script>
+
+</html>
