@@ -67,7 +67,7 @@ fileUrl.belongsTo(user);
 // });
 
 app.get("/test", (req, res) => {
-  res.send("hello ec2 ");
+  res.send("hello ec2 welcome ");
 });
 
 // DATABASE
